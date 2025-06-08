@@ -44,7 +44,7 @@ The marketplace interacts directly with a deployed ERC-721 compatible smart cont
 
 📁 WalletConnect/
 - WalletConnect.js      // Handles MetaMask login
-- 
+  
 📁 NFTManagement/
 - NFTList.js            // Shows listed NFTs
 - ListNFT.js            // Lists a new NFT
@@ -57,9 +57,7 @@ The marketplace interacts directly with a deployed ERC-721 compatible smart cont
 - NFT.sol               // Example ERC721 token
 
  ---
- 
-
-# Contract Address
+ # Contract Address
 
 - NFTSwap address: 0xECdeAaD85A695CEb83d5d9e00c0D3160220773A7
   
@@ -68,10 +66,16 @@ The marketplace interacts directly with a deployed ERC-721 compatible smart cont
 - ERC721 address: 0x49B2d6D7C118ebb606D1402797c9a9d183beA706
   
   NFTs for testing
+---
+## 🧪 Deployment Notes
+✅ Smart contract deployed to Sepolia Testnet
 
-# ⚙️ Built With
+🦊 MetaMask must be connected to Sepolia network
 
-React.js、Web3.js、Solidity
+📤 Deployment and verification done via Remix
+
+---
+#  Interface Overview
 
 ![3](https://github.com/user-attachments/assets/6c90fc95-5612-4a9c-aaf0-2a3c06fcb329)
 ![2](https://github.com/user-attachments/assets/79859ee7-5ca1-45ce-b990-92b14412968f)
