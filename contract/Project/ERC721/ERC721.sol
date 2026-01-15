@@ -10,8 +10,8 @@ import "./Address.sol";
 import "./String.sol";
 
 contract ERC721 is IERC721, IERC721Metadata{
-    using Address for address; // 使用Address庫，用isContract来判斷地址是否為合約
-    using Strings for uint256; // 使用String庫，
+    using Address for address; // 使用Address庫，用isContract來判斷地址是否為合約
+    using Strings for uint256; // 使用String庫
 
     // Token名稱
     string public override name;
@@ -23,7 +23,7 @@ contract ERC721 is IERC721, IERC721Metadata{
     mapping(address => uint) private _balances;
     // tokenID 到 授權地址 的授權映射
     mapping(uint => address) private _tokenApprovals;
-    //  owner地址。到operator地址 的批量授權映射
+    // owner地址 到 operator地址 的批量授權映射
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
     /**
@@ -47,7 +47,7 @@ contract ERC721 is IERC721, IERC721Metadata{
             interfaceId == type(IERC721Metadata).interfaceId;
     }
 
-    // 實現RC721的balanceOf，利用_balances變量查詢owner地址的balance。
+    // 實現IERC721的balanceOf，利用_balances變量查詢owner地址的balance。
     function balanceOf(address owner) external view override returns (uint) {
         require(owner != address(0), "owner = zero address");
         return _balances[owner];
@@ -59,7 +59,7 @@ contract ERC721 is IERC721, IERC721Metadata{
         require(owner != address(0), "token doesn't exist");
     }
 
-    // 實現IERC721的isApprovedForAll，利用_operatorApprovals變量查詢owner地址是否将所持NFT批量授權给了operator地址。
+    // 實現IERC721的isApprovedForAll，利用_operatorApprovals變量查詢owner地址是否將所持NFT批量授權給了operator地址。
     function isApprovedForAll(address owner, address operator)
         external
         view
@@ -69,19 +69,19 @@ contract ERC721 is IERC721, IERC721Metadata{
         return _operatorApprovals[owner][operator];
     }
 
-    // 實現IERC721的setApprovalForAll，將持有代幣全部授權给operator地址。調用_setApprovalForAll函數。
+    // 實現IERC721的setApprovalForAll，將持有代幣全部授權給operator地址。調用_setApprovalForAll函數。
     function setApprovalForAll(address operator, bool approved) external override {
         _operatorApprovals[msg.sender][operator] = approved;
         emit ApprovalForAll(msg.sender, operator, approved);
     }
 
-    // 實現IERC721的getApproved，利用_tokenApprovals變量查询tokenId的授權地址。
+    // 實現IERC721的getApproved，利用_tokenApprovals變量查詢tokenId的授權地址。
     function getApproved(uint tokenId) external view override returns (address) {
         require(_owners[tokenId] != address(0), "token doesn't exist");
         return _tokenApprovals[tokenId];
     }
      
-    // 授權函數。通過調整_tokenApprovals来，授權 to 地址操作 tokenId，同時釋放Approval事件。
+    // 授權函數。通過調整_tokenApprovals，授權 to 地址操作 tokenId，同時釋放Approval事件。
     function _approve(
         address owner,
         address to,
@@ -91,7 +91,7 @@ contract ERC721 is IERC721, IERC721Metadata{
         emit Approval(owner, to, tokenId);
     }
 
-    // 實現IERC721的approve，將tokenId授權给 to 地址。條件：to不是owner，且msg.sender是owner或授權地址。調用_approve函数。
+    // 實現IERC721的approve，將tokenId授權給 to 地址。條件：to不是owner，且msg.sender是owner或授權地址。調用_approve函數。
     function approve(address to, uint tokenId) external override {
         address owner = _owners[tokenId];
         require(
@@ -113,7 +113,7 @@ contract ERC721 is IERC721, IERC721Metadata{
     }
 
     /*
-     * 轉帳函數。通過調整_balances和_owner變量將 tokenId 從 from 轉帳给 to，同時釋放Transfer事件。
+     * 轉帳函數。通過調整_balances和_owner變量將 tokenId 從 from 轉帳給 to，同時釋放Transfer事件。
      * 條件:
      * 1. tokenId 被 from 擁有
      * 2. to 不是0地址
@@ -151,12 +151,12 @@ contract ERC721 is IERC721, IERC721Metadata{
     }
 
     /**
-     * 安全轉帳，安全地將 tokenId 代幣從 from 轉移到 to，會检查合約接收者是否了解 ERC721 協議，以防止代幣
+     * 安全轉帳，安全地將 tokenId 代幣從 from 轉移到 to，會檢查合約接收者是否了解 ERC721 協議，以防止代幣
      被永久鎖定。調用了_transfer函數和_checkOnERC721Received函數。條件：
      * from 不能是0地址.
      * to 不能是0地址.
-     * tokenId 代幣必须存在，并且被 from擁有.
-     * 如果 to 是智能合约, 他必須支持 IERC721Receiver-onERC721Received.
+     * tokenId 代幣必須存在，並且被 from擁有.
+     * 如果 to 是智能合約, 他必須支持 IERC721Receiver-onERC721Received.
      */
     function _safeTransfer(
         address owner,
@@ -195,11 +195,10 @@ contract ERC721 is IERC721, IERC721Metadata{
         safeTransferFrom(from, to, tokenId, "");
     }
 
-    /** 
-     * 鑄造函數。通過調整_balances和_owners變量来鑄造tokenId並轉帳给 to，同時釋放Transfer事件。鑄造函數。通過調整_balances和_owners變量来鑄造tokenId並轉帳给 to，同時釋放Transfer事件。
-     * 这个mint函數所有人都能調用，實際使用需要開發人員重寫，加上一些條件。
+    /** * 鑄造函數。通過調整_balances和_owners變量來鑄造tokenId並轉帳給 to，同時釋放Transfer事件。
+     * 這個mint函數所有人都能調用，實際使用需要開發人員重寫，加上一些條件。
      * 條件:
-     * 1. tokenId尚不存在。
+     * 1. tokenId尚未存在。
      * 2. to不是0地址.
      */
     function _mint(address to, uint tokenId) internal virtual {
@@ -212,7 +211,7 @@ contract ERC721 is IERC721, IERC721Metadata{
         emit Transfer(address(0), to, tokenId);
     }
 
-    //  銷毀函數，通過調整_balances和_owners變量来銷毀tokenId，同时釋放Transfer事件。條件：tokenId存在。
+    //  銷毀函數，通過調整_balances和_owners變量來銷毀tokenId，同時釋放Transfer事件。條件：tokenId存在。
     function _burn(uint tokenId) internal virtual {
         address owner = ownerOf(tokenId);
         require(msg.sender == owner, "not owner of token");
@@ -225,7 +224,7 @@ contract ERC721 is IERC721, IERC721Metadata{
         emit Transfer(owner, address(0), tokenId);
     }
 
-    // _checkOnERC721Received：函數，用于在 to 為合約的時候調用IERC721Receiver-onERC721Received, 以防 tokenId 被不小心轉入黑洞。
+    // _checkOnERC721Received：函數，用於在 to 為合約的時候調用IERC721Receiver-onERC721Received, 以防 tokenId 被不小心轉入黑洞。
     function _checkOnERC721Received(
         address from,
         address to,
@@ -246,7 +245,7 @@ contract ERC721 is IERC721, IERC721Metadata{
     }
 
     /**
-     * 實現IERC721Metadata的tokenURI函数，查詢metadata。
+     * 實現IERC721Metadata的tokenURI函數，查詢metadata。
      */
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         require(_owners[tokenId] != address(0), "Token Not Exist");
@@ -256,10 +255,11 @@ contract ERC721 is IERC721, IERC721Metadata{
     }
 
     /**
-     * 計算{tokenURI}的BaseURI，tokenURI就是把baseURI和tokenId拼接在一起，需要開發重寫。
+     * 計算{tokenURI}的BaseURI，tokenURI=baseURI和tokenId拼接在一起，需要開發重寫。
      * BAYC的baseURI為ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/ 
      */
     function _baseURI() internal view virtual returns (string memory) {
         return "";
     }
+
 }
